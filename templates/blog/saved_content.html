@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Content | Nexus</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'nexuslogo.png' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        body { font-family: 'Lora', serif; background: #f9fafb; }
+        h1, h2, h3, .font-ui { font-family: 'Poppins', sans-serif; }
+        .post-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-sm shadow-sm mb-6">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" id="homeLink" class="text-3xl font-bold text-gray-900 font-ui tracking-tight">
+                <img src="{% static 'nexuslogo.png' %}" alt="Nexus Logo" style="height:50px; display:inline; vertical-align:middle;">
+            Nexus</a>
+            <div class="flex items-center space-x-4">
+                <form action="{% url 'search_users' %}" method="GET" class="relative">
+                    <input type="text" name="q" placeholder="Search users..." class="py-2 px-4 pr-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <button type="submit" class="absolute right-3 top-2.5 text-gray-500">
+                        <i data-feather="search" class="w-4 h-4"></i>
+                    </button>
+                </form>
+                <a href="/posts/" class="text-gray-700 hover:text-indigo-700 font-semibold">All Stories</a>
+                <a href="/logout/" class="text-gray-700 hover:text-indigo-700 font-semibold">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <div class="max-w-6xl mx-auto">
+            <!-- Page Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Your Saved Content</h1>
+                <p class="text-gray-600 text-lg">All the stories you've saved for later reading</p>
+            </div>
+
+            {% if posts %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for post in posts %}
+                        <div class="post-card bg-white rounded-xl shadow-md overflow-hidden">
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
+                            {% else %}
+                                <div class="w-full h-48 bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center">
+                                    <i data-feather="file-text" class="w-12 h-12 text-indigo-300"></i>
+                                </div>
+                            {% endif %}
+                            <div class="p-6">
+                                <div class="flex items-center mb-3">
+                                    {% if post.category %}
+                                        <span class="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold px-2 py-1 rounded-full uppercase tracking-wide">{{ post.category.name }}</span>
+                                    {% endif %}
+                                </div>
+                                <h3 class="text-xl font-bold mb-3 text-gray-900">{{ post.title }}</h3>
+                                <p class="text-gray-600 mb-4 line-clamp-3">{{ post.content|truncatewords:20 }}</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <span class="text-sm text-gray-500">{{ post.author.username }}</span>
+                                        <span class="mx-2 text-gray-300">•</span>
+                                        <span class="text-sm text-gray-500">{{ post.created_at|date:"M d, Y" }}</span>
+                                    </div>
+                                    <a href="{% url 'post_detail' post.slug %}" class="text-indigo-600 hover:text-indigo-800 font-semibold text-sm">Read more</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-16">
+                    <div class="text-6xl mb-6">📚</div>
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-900">No saved content yet</h2>
+                    <p class="text-gray-600 mb-8">Start exploring stories and save the ones you love!</p>
+                    <a href="/posts/" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-full hover:bg-indigo-700 transition-colors">
+                        <i data-feather="book-open" class="w-5 h-5 mr-2"></i>
+                        Explore Stories
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>

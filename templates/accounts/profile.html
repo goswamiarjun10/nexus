@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .profile-pic-container {
+            margin-top: -75px; /* Overlap the banner */
+        }
+        .post-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
+
+    <!-- Main Profile Card -->
+    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden">
+
+        <!-- Banner and Profile Picture Section -->
+        <div class="relative">
+            <!-- Banner Image -->
+            {% if profile.banner_picture and profile.banner_picture.url %}
+            <img src="{{ profile.banner_picture.url }}" 
+                 alt="Banner Image" 
+                 class="w-full h-48 sm:h-64 object-cover"
+                 onerror="this.onerror=null;this.src='https://placehold.co/1200x400/cccccc/ffffff?text=Image+Not+Found';">
+            {% else %}
+            <div class="w-full h-48 sm:h-64 bg-blue-50 flex items-center justify-center text-blue-300 text-xl font-semibold">No Banner</div>
+            {% endif %}
+            
+            <!-- Profile Picture -->
+            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 profile-pic-container">
+                <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-white bg-gray-200 shadow-lg overflow-hidden">
+                    {% if profile.profile_picture and profile.profile_picture.url %}
+                    <img src="{{ profile.profile_picture.url }}" 
+                         alt="Profile Picture" 
+                         class="w-full h-full object-cover"
+                         onerror="this.onerror=null;this.src='https://placehold.co/200x200/cccccc/ffffff?text=User';">
+                    {% else %}
+                    <img src="{% static 'static/pp.jpeg' %}" 
+                         alt="Profile Picture" 
+                         class="w-full h-full object-cover"
+                         onerror="this.onerror=null;this.src='https://placehold.co/200x200/cccccc/ffffff?text=User';">
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Edit Profile Button -->
+            <a href="{% url 'settings' %}" class="absolute top-4 right-4 bg-white/80 backdrop-blur-sm text-gray-800 hover:bg-white transition-all duration-300 px-4 py-2 rounded-full shadow-md text-sm font-semibold flex items-center gap-2">
+                <i class="fas fa-pencil-alt"></i>
+                <span>Edit Profile</span>
+            </a>
+        </div>
+
+        <!-- User Info Section -->
+        <div class="pt-24 sm:pt-28 pb-12 px-6 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">{{ user.username }}</h1>
+            <p class="text-gray-500 mt-2">{{ user.email }}</p>
+            
+            <!-- Bio Section -->
+            <div class="mt-8 max-w-2xl mx-auto">
+                <h2 class="text-lg font-semibold text-gray-700">BIO</h2>
+                <p class="text-gray-600 mt-2 leading-relaxed">
+                    {% if profile.bio %}
+                        {{ profile.bio }}
+                    {% else %}
+                        No bio available.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <!-- Separator -->
+        <hr class="border-gray-200">
+
+        <!-- Posts Section -->
+        <div class="p-6 sm:p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Posts</h2>
+            
+            <!-- Posts Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                {% for post in posts %}
+                    <div class="post-card bg-white rounded-xl shadow-md p-4">
+                        <img src="{{ post.image.url }}" alt="Post Image" class="w-full h-40 object-cover rounded-t-xl">
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-gray-800">{{ post.title }}</h3>
+                            <p class="text-gray-600 mt-2">{{ post.content|truncatechars_html:100 }}</p>
+                            <div class="flex justify-between items-center mt-4">
+                                <span class="text-sm text-gray-500">{{ post.created_at|date:"F d, Y" }}</span>
+                                <span class="text-sm text-gray-500">{{ post.author.username }}</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

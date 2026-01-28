@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus | Authentication</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'nexuslogo.png' %}">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    :root {
+      --primary-hue: 245;
+      --secondary-hue: 325;
+      --text-color: #1f2937;
+      --bg-color: #f9fafb;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    .aurora-background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      opacity: 0.1;
+      background: linear-gradient(45deg, hsl(var(--primary-hue), 90%, 80%), hsl(var(--secondary-hue), 90%, 80%));
+      background-size: 200% 200%;
+      animation: aurora-flow 20s ease-in-out infinite alternate;
+    }
+    @keyframes aurora-flow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+    .view {
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+    .view.hidden {
+      opacity: 0; transform: scale(0.98);
+      pointer-events: none;
+      position: absolute; width: 100%;
+    }
+    .form-input {
+      background-color: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      --tw-ring-color: hsla(var(--primary-hue), 80%, 60%, 0.3);
+      border-color: hsl(var(--primary-hue), 80%, 60%);
+      box-shadow: 0 0 0 3px var(--tw-ring-color);
+      outline: none;
+    }
+    .btn-magic {
+      position: relative;
+      background-image: linear-gradient(45deg, hsl(var(--primary-hue), 80%, 60%), hsl(var(--secondary-hue), 80%, 60%));
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .btn-magic:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px hsla(var(--primary-hue), 50%, 50%, 0.4);
+    }
+  </style>
+</head>
+<body class="antialiased flex items-center justify-center min-h-screen p-4">
+  <div class="aurora-background"></div>
+
+  <main class="w-full max-w-md relative">
+    <div class="bg-white/70 backdrop-blur-xl p-8 rounded-3xl shadow-2xl">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ heading }}</h1>
+        <p class="text-gray-500 mt-2">{{ subheading }}</p>
+      </div>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm auth-error-message" id="auth-error-message">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+      <form method="POST" action="" autocomplete="off" id="main-auth-form">
+        {% csrf_token %}
+        {% if form.errors %}
+          <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm auth-error-message" id="auth-error-message">
+            {% for field in form %}
+              {% for error in field.errors %}
+                <div>{{ error }}</div>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <div>{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% for field in form.visible_fields %}
+          <div class="mb-4">
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+            <div class="mt-1 relative">
+              {% if field.field.widget.input_type == 'password' %}
+                {{ field }}
+                <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 password-toggle" tabindex="-1">
+                  <i data-feather="eye" class="w-5 h-5 text-gray-400"></i>
+                </button>
+              {% else %}
+                {{ field }}
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+
+{% comment %} <div class="flex justify-end mb-4">
+  <a href="{% url 'password_reset' %}" class="text-sm text-indigo-600 hover:text-indigo-500 font-medium">Forgot Password?</a>
+</div> {% endcomment %}
+
+        <div>
+          <button type="submit" class="w-full btn-magic flex justify-center text-white font-semibold py-3 px-4 rounded-full">
+            {{ button_text }}
+          </button>
+        </div>
+      </form>
+      <p class="text-center text-sm text-gray-500 mt-8">
+        {{ switch_text }}
+        <a href="{{ switch_url }}" class="font-semibold text-indigo-600 hover:text-indigo-500">{{ switch_link }}</a>
+      </p>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      feather.replace();
+      // Password visibility toggle
+      document.querySelectorAll('.password-toggle').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const input = btn.parentElement.querySelector('input');
+          if (input.type === 'password') {
+            input.type = 'text';
+            btn.innerHTML = '<i data-feather="eye-off" class="w-5 h-5 text-gray-400"></i>';
+            feather.replace();
+          } else {
+            input.type = 'password';
+            btn.innerHTML = '<i data-feather="eye" class="w-5 h-5 text-gray-400"></i>';
+            feather.replace();
+          }
+        });
+      });
+      // Auto-hide error message after 5 seconds
+      const errorMsg = document.getElementById('auth-error-message');
+      if (errorMsg) {
+        setTimeout(function() {
+          errorMsg.style.display = 'none';
+        }, 5000);
+      }
+      // Clear form data on page load
+      var form = document.getElementById('main-auth-form');
+      if (form) {
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>

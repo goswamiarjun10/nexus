@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Nexus</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'nexuslogo.png' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        body { font-family: 'Lora', serif; background: #f9fafb; }
+        h1, h2, h3, .font-ui { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl w-full bg-white/90 backdrop-blur-xl p-10 rounded-3xl shadow-2xl">
+            <h2 class="text-4xl font-extrabold mb-8 text-gray-900 text-center">Settings</h2>
+            {% if messages %}
+            <div class="mb-6" id="django-messages">
+                {% for message in messages %}
+                    <div class="px-4 py-3 rounded-xl mb-2 text-base font-semibold {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <form method="post" enctype="multipart/form-data" class="space-y-7">
+                {% csrf_token %}
+                <!-- Email Change -->
+                <div class="mb-6">
+                    <label for="email" class="block text-lg font-semibold text-gray-800 font-ui mb-2">Email Address</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" class="form-input block w-full bg-gray-100 rounded-xl border border-gray-300 focus:border-indigo-500 focus:bg-white px-4 py-3 text-lg">
+                </div>
+                <!-- Username Change -->
+                <div class="mb-6">
+                    <label for="username" class="block text-lg font-semibold text-gray-800 font-ui mb-2">Username</label>
+                    <input type="text" id="username" name="username" value="{{ user.username }}" class="form-input block w-full bg-gray-100 rounded-xl border border-gray-300 focus:border-indigo-500 focus:bg-white px-4 py-3 text-lg">
+                </div>
+                <!-- Password Change -->
+                <div class="mb-6">
+                    <button type="submit" class="px-10 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 to-pink-500 shadow-lg hover:from-indigo-600 hover:to-pink-600 transition-all">
+                    <a href="{% url 'password_change' %}" class="pw-change-link">Reset Password</a>
+                    </button>
+                </div>
+                <!-- Profile Edit Section (same as profile page) -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold mb-4">Edit Profile</h3>
+                    <!-- Banner Picture -->
+                    <div class="flex flex-col items-center mb-4">
+                        {% if profile.banner_picture %}
+                            <img src="{{ profile.banner_picture.url }}" alt="Banner" class="w-full h-32 object-cover rounded-xl mb-2 border-4 border-indigo-200">
+                            <button type="submit" name="remove_banner" value="true" class="text-sm text-red-600 hover:underline mb-2">Remove Banner</button>
+                        {% else %}
+                            <div class="w-full h-32 bg-indigo-50 rounded-xl mb-2 flex items-center justify-center text-indigo-400">No Banner</div>
+                        {% endif %}
+                        <label class="block text-sm font-medium text-gray-700 mt-2">Change Banner Picture</label>
+                        <input type="file" name="banner_picture" class="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" accept="image/*">
+                    </div>
+                    <!-- Profile Picture -->
+                    <div class="flex flex-col items-center mb-4">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="h-20 w-20 rounded-full object-cover mb-2 border-4 border-indigo-200">
+                            <button type="submit" name="remove_profile" value="true" class="text-sm text-red-600 hover:underline mb-2">Remove Profile Picture</button>
+                        {% else %}
+                            <img src="" alt="Profile Picture" class="h-20 w-20 rounded-full object-cover mb-2 border-4 border-indigo-200">
+                        {% endif %}
+                        <label class="block text-sm font-medium text-gray-700 mt-2">Change Profile Picture</label>
+                        <input type="file" name="profile_picture" class="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" accept="image/*">
+                    </div>
+                    <!-- Short Bio -->
+                    <div class="mb-4">
+                        <label for="bio" class="block text-lg font-semibold text-gray-800 font-ui mb-2">Short Bio</label>
+                        <textarea id="bio" name="bio" rows="3" class="form-input block w-full bg-gray-100 rounded-xl border border-gray-300 focus:border-indigo-500 focus:bg-white px-4 py-3 text-lg">{{ profile.bio }}</textarea>
+                    </div>
+                </div>
+                <div class="flex justify-center pt-8">
+                    <button type="submit" class="px-10 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 to-pink-500 shadow-lg hover:from-indigo-600 hover:to-pink-600 transition-all">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>feather.replace();
+    setTimeout(function() {
+      var msgDiv = document.getElementById('django-messages');
+      if (msgDiv) { msgDiv.style.display = 'none'; }
+    }, 5000);
+    </script>
+</body>
+</html>

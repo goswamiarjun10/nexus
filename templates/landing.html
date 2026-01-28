@@ -1,0 +1,420 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - The Convergence of Ideas</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'nexuslogo.png' %}">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Playfair Display for headings, Source Sans 3 for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Source+Sans+3:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Animate.css for entrance animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <style>
+        /* --- The Ultimate Landing Page Customizations --- */
+        :root {
+            --primary-hue: 260;
+            /* A deep, elegant purple */
+            --secondary-hue: 320;
+            /* A vibrant magenta */
+            --text-color: #111827;
+            /* Gray 900 */
+            --bg-color: #ffffff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h1,
+        h2,
+        h3,
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- Animated Gradient Background --- */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, hsl(var(--primary-hue), 100%, 98%), hsl(var(--secondary-hue), 100%, 98%), #ffffff);
+            background-size: 200% 200%;
+            animation: gradient-flow 15s ease-in-out infinite;
+        }
+
+        @keyframes gradient-flow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* --- Glassmorphism Header --- */
+        .header-glass {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* --- Magic Button --- */
+        .btn-magic {
+            position: relative;
+            overflow: hidden;
+            background-image: linear-gradient(45deg, hsl(var(--primary-hue), 70%, 55%), hsl(var(--secondary-hue), 80%, 60%));
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 7px 25px hsla(var(--primary-hue), 50%, 50%, 0.2);
+            align-items: center;
+        }
+
+        .btn-magic:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 35px hsla(var(--primary-hue), 50%, 50%, 0.3);
+        }
+
+        /* --- Featured Post Card --- */
+        .featured-card {
+            border-radius: 1.5rem;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+        }
+
+        .featured-card .img-wrapper {
+            overflow: hidden;
+            border-radius: 1.5rem;
+        }
+
+        .featured-card .img-wrapper img {
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .featured-card:hover .img-wrapper img {
+            transform: scale(1.08);
+        }
+
+        /* --- Section Title Styling --- */
+        .section-title {
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background-image: linear-gradient(to right, hsl(var(--primary-hue), 70%, 55%), hsl(var(--secondary-hue), 80%, 60%));
+            border-radius: 2px;
+        }
+
+        /* --- Animation on Scroll --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <div class="gradient-bg"></div>
+
+    <!-- Header -->
+    <header id="header" class="header-glass sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-3xl font-black font-display text-gray-900">
+                <img src="{% static 'nexuslogo.png' %}" alt="Nexus Logo"
+                    style="height:70px; display:inline; vertical-align:middle;">
+                Nexus</a>
+            </a>
+            <div class="hidden md:flex items-center space-x-8 font-medium text-gray-700">
+                {% comment %} <form action="{% url 'search_users' %}" method="GET" class="relative">
+                    <input type="text" name="q" placeholder="Search users..."
+                        class="py-2 px-4 pr-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <button type="submit" class="absolute right-3 top-2.5 text-gray-500">
+                        <i data-feather="search" class="w-4 h-4"></i>
+                    </button>
+                </form> {% endcomment %}
+                <a href="/posts/"
+                    class="font-semibold text-gray-700 hover:text-indigo-700 px-4 py-2 rounded-full transition-colors">Home</a>
+                <a href="#explore"
+                    class="font-semibold text-gray-700 hover:text-indigo-700 px-4 py-2 rounded-full transition-colors">Explore</a>
+                <a href="#features"
+                    class="font-semibold text-gray-700 hover:text-indigo-700 px-4 py-2 rounded-full transition-colors">Features</a>
+                {% comment %} <a href="/profile/"
+                    class="font-semibold text-gray-700 hover:text-indigo-700 px-4 py-2 rounded-full transition-colors">Profile</a> {% endcomment %}
+                <a href="#join"
+                    class="font-semibold text-gray-700 hover:text-indigo-700 px-4 py-2 rounded-full transition-colors">Join</a>
+
+
+            </div>
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                <div class="relative group">
+                    <button id="profileMenuBtn" class="focus:outline-none">
+                        {% if user.profile.profile_picture %}
+                        <img src="{{ user.profile.profile_picture.url }}" alt="Profile"
+                            class="h-10 w-10 rounded-full object-cover border-2 border-indigo-300">
+                        {% else %}
+                        <div
+                            class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center border-2 border-indigo-300">
+                            <span class="text-lg font-bold text-indigo-500">{{ user.username|first|upper }}</span>
+                        </div>
+                        {% endif %}
+                    </button>
+                    <div id="profileDropdown"
+                        class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 z-50 group-focus:block group-hover:block">
+                        <a href="/profile/" class="flex items-center px-5 py-3 hover:bg-indigo-50 text-gray-800">
+                            <i data-feather="user" class="w-5 h-5 mr-3"></i> Profile
+                        </a>
+                        <a href="/settings/" class="flex items-center px-5 py-3 hover:bg-indigo-50 text-gray-800">
+                            <i data-feather="settings" class="w-5 h-5 mr-3"></i> Settings
+                        </a>
+                        <a href="/blog/saved/" class="flex items-center px-5 py-3 hover:bg-indigo-50 text-gray-800">
+                            <i data-feather="bookmark" class="w-5 h-5 mr-3"></i> Saved Content
+                        </a>
+                        <div class="border-t my-2"></div>
+                        <a href="/logout/" class="flex items-center px-5 py-3 hover:bg-red-50 text-red-600">
+                            <i data-feather="log-out" class="w-5 h-5 mr-3"></i> Logout
+                        </a>
+                    </div>
+                </div>
+                <!-- <script>
+                    const btn = document.getElementById('profileMenuBtn');
+                    const dropdown = document.getElementById('profileDropdown');
+                    btn.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        dropdown.classList.toggle('hidden');
+                    });
+                    document.addEventListener('click', function (e) {
+                        if (!btn.contains(e.target)) {
+                            dropdown.classList.add('hidden');
+                        }
+                    });
+                </script> -->
+                {% else %}
+                <a href="/login" class="font-semibold text-gray-700 hover:text-purple-700 transition-colors">Log In</a>
+                <a href="/register" class="btn-magic text-white font-semibold py-3 px-7 rounded-full">Get Started</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-24 pb-32 text-center overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="animate__animated animate__fadeInDown">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 leading-tight">The Convergence <br>
+                    of Ideas</h1>
+                <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">A universe of stories, insights, and
+                    knowledge, meticulously crafted by thinkers, creators, and dreamers like you.</p>
+            </div>
+            <div class="mt-12 animate__animated animate__fadeInUp">
+                <a href="/register" class="btn-magic text-white font-bold py-4 px-10 rounded-full text-lg">Start Your
+                    Journey &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Posts Section -->
+    <section id="explore" class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title text-4xl md:text-5xl font-bold text-center mb-20 reveal">From Our Community</h2>
+            <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Featured Post 1 -->
+                <div class="featured-card bg-white shadow-xl overflow-hidden cursor-pointer group reveal">
+                    <div class="img-wrapper">
+                        <img src="https://placehold.co/600x400/8b5cf6/ffffff?text=Mindscapes" alt="Post thumbnail">
+                    </div>
+                    <div class="p-8">
+                        <p class="text-sm font-semibold text-purple-600">PHILOSOPHY</p>
+                        <h3
+                            class="mt-2 text-2xl font-bold text-gray-900 font-display group-hover:text-purple-600 transition-colors">
+                            Navigating the Labyrinth of the Mind</h3>
+                        <p class="mt-4 text-gray-600">An exploration into the nature of consciousness and the constructs
+                            of reality we build for ourselves.</p>
+                    </div>
+                </div>
+                <!-- Featured Post 2 -->
+                <div class="featured-card bg-white shadow-xl overflow-hidden cursor-pointer group reveal"
+                    style="transition-delay: 200ms;">
+                    <div class="img-wrapper">
+                        <img src="https://placehold.co/600x400/ec4899/ffffff?text=Future+Tech" alt="Post thumbnail">
+                    </div>
+                    <div class="p-8">
+                        <p class="text-sm font-semibold text-pink-600">TECHNOLOGY</p>
+                        <h3
+                            class="mt-2 text-2xl font-bold text-gray-900 font-display group-hover:text-pink-600 transition-colors">
+                            The Bio-Integrated Future is Here</h3>
+                        <p class="mt-4 text-gray-600">How advancements in biotechnology are set to redefine what it
+                            means to be human in the next decade.</p>
+                    </div>
+                </div>
+                <!-- Featured Post 3 -->
+                <div class="featured-card bg-white shadow-xl overflow-hidden cursor-pointer group reveal"
+                    style="transition-delay: 400ms;">
+                    <div class="img-wrapper">
+                        <img src="https://placehold.co/600x400/10b981/ffffff?text=Creativity" alt="Post thumbnail">
+                    </div>
+                    <div class="p-8">
+                        <p class="text-sm font-semibold text-emerald-600">CREATIVE ARTS</p>
+                        <h3
+                            class="mt-2 text-2xl font-bold text-gray-900 font-display group-hover:text-emerald-600 transition-colors">
+                            The Lost Art of Unplugged Creativity</h3>
+                        <p class="mt-4 text-gray-600">Rediscovering the power of analog tools and focused solitude in a
+                            world of digital distraction.</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="mt-10 reveal flex justify-center" style="transition-delay: 200ms;">
+                <a href="/posts/" class="btn-magic text-white font-bold py-4 px-10 rounded-full text-lg">Explore More
+                    Content</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title text-4xl md:text-5xl font-bold text-center mb-20 reveal">A Platform Built for
+                Expression</h2>
+            <div class="grid md:grid-cols-3 gap-12 text-center">
+                <!-- Feature 1 -->
+                <div class="reveal">
+                    <div
+                        class="flex items-center justify-center h-20 w-20 mx-auto rounded-full bg-purple-100 text-purple-600">
+                        <i data-feather="edit" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="mt-6 text-2xl font-bold font-display">Intuitive Editor</h3>
+                    <p class="mt-2 text-gray-600">A clean, powerful, and distraction-free writing environment that lets
+                        your ideas flow effortlessly.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="reveal" style="transition-delay: 200ms;">
+                    <div
+                        class="flex items-center justify-center h-20 w-20 mx-auto rounded-full bg-pink-100 text-pink-600">
+                        <i data-feather="grid" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="mt-6 text-2xl font-bold font-display">Powerful Organization</h3>
+                    <p class="mt-2 text-gray-600">Use categories and tags to structure your thoughts and help readers
+                        discover your work.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="reveal" style="transition-delay: 400ms;">
+                    <div
+                        class="flex items-center justify-center h-20 w-20 mx-auto rounded-full bg-emerald-100 text-emerald-600">
+                        <i data-feather="globe" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="mt-6 text-2xl font-bold font-display">Reach Your Audience</h3>
+                    <p class="mt-2 text-gray-600">Publish your stories to a growing community of curious minds and share
+                        your voice with the world.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section id="join" class="py-24 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-black text-gray-900 reveal">Your Next Chapter Awaits.</h2>
+                <p class="mt-4 text-lg text-gray-600 reveal" style="transition-delay: 100ms;">Join thousands of writers
+                    and readers on a platform designed for deep thinking and meaningful conversations. Your voice
+                    matters. It's time to share it.</p>
+                <div class="mt-10 reveal" style="transition-delay: 200ms;">
+                    <a href="/register" class="btn-magic text-white font-bold py-4 px-10 rounded-full text-lg">Sign Up
+                        for Free</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12">
+        <div class="container mx-auto px-6 text-center text-gray-500">
+            <p>&copy; 2025 Nexus. A tribute to the written word, crafted with care by Arjun Goswami.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Feather Icons Initialization ---
+            feather.replace();
+
+            
+
+            // --- Header Shadow on Scroll ---
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('shadow-md');
+                } else {
+                    header.classList.remove('shadow-md');
+                }
+            });
+
+            // --- Animate on Scroll ---
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            revealElements.forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+
+</html>

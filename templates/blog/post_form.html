@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create/Edit Post | Nexus</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'nexuslogo.png' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        body { font-family: 'Lora', serif; background: #f9fafb; }
+        h1, h2, h3, .font-ui { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-sm shadow-sm mb-6">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" id="homeLink" class="text-3xl font-bold text-gray-900 font-ui tracking-tight">
+                <img src="{% static 'nexuslogo.png' %}" alt="Nexus Logo" style="height:50px; display:inline; vertical-align:middle;">
+            Nexus</a>
+            <div class="flex items-center space-x-4">
+                <form action="{% url 'search_users' %}" method="GET" class="relative">
+                    <input type="text" name="q" placeholder="Search users..." class="py-2 px-4 pr-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <button type="submit" class="absolute right-3 top-2.5 text-gray-500">
+                        <i data-feather="search" class="w-4 h-4"></i>
+                    </button>
+                </form>
+                <a href="/posts/" class="text-gray-700 hover:text-indigo-700 font-semibold">All Stories</a>
+                {% if user.is_authenticated %}
+                <a href="/logout/" class="text-gray-700 hover:text-indigo-700 font-semibold">Logout</a>
+                {% else %}
+                <a href="/login/" class="text-gray-700 hover:text-indigo-700 font-semibold">Login</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl w-full bg-white/90 backdrop-blur-xl p-10 rounded-3xl shadow-2xl">
+            <h2 class="text-4xl font-extrabold mb-10 text-gray-900 text-center">{% if form.instance.pk %}Edit{% else %}Create{% endif %} Post</h2>
+            <form method="post" enctype="multipart/form-data" class="space-y-7">
+                {% csrf_token %}
+                {% if form.errors %}
+                <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% for field in form.visible_fields %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-lg font-semibold text-gray-800 font-ui mb-2">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <div class="flex justify-between pt-8">
+                    <a href="/posts/" class="px-8 py-3 rounded-full font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 transition-all">Cancel</a>
+                    <button type="submit" class="px-10 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 to-pink-500 shadow-lg hover:from-indigo-600 hover:to-pink-600 transition-all">{% if form.instance.pk %}Update{% else %}Publish{% endif %} Story</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>feather.replace();</script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Where Stories Unfold</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'nexuslogo.png' %}">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Lora for body, Poppins for UI/headings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Animate.css for entrance animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        /* --- The Ultimate UI Customizations --- */
+        :root {
+            --primary-hue: 245; /* Blue-violet */
+            --secondary-hue: 195; /* Cyan */
+            --text-color: #1f2937; /* Gray 800 */
+            --bg-color: #f9fafb; /* Gray 50 */
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* Use Poppins for UI elements and headings for a modern contrast */
+        h1, h2, h3, h4, h5, h6, button, .font-ui {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* --- Glassmorphism Header --- */
+        .header-glass {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- Aurora Gradient Background Effect --- */
+        .aurora-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+            background: linear-gradient(45deg, hsl(var(--primary-hue), 90%, 80%), hsl(var(--secondary-hue), 90%, 80%));
+            animation: aurora-flow 20s ease-in-out infinite alternate;
+        }
+        @keyframes aurora-flow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* --- View Transitions --- */
+        .view {
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .view.hidden {
+            opacity: 0;
+            transform: scale(0.98);
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
+        }
+
+        /* --- Magnetic, Gradient Button --- */
+        .btn-magic {
+            position: relative;
+            overflow: hidden;
+            background-image: linear-gradient(45deg, hsl(var(--primary-hue), 80%, 60%), hsl(var(--primary-hue), 80%, 70%));
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .btn-magic:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px hsla(var(--primary-hue), 50%, 50%, 0.4);
+        }
+
+        /* --- Post Card with Parallax Image Hover --- */
+        .post-card {
+            border-radius: 1.5rem; /* 24px */
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .post-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+        .post-card .img-wrapper {
+            overflow: hidden;
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 1.5rem;
+        }
+        .post-card .img-wrapper img {
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .post-card:hover .img-wrapper img {
+            transform: scale(1.1);
+        }
+
+        /* --- Custom Form Styling --- */
+        .form-input {
+            background-color: #fdfdff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        .form-input:focus {
+            --tw-ring-color: hsla(var(--primary-hue), 80%, 60%, 0.3);
+            border-color: hsl(var(--primary-hue), 80%, 60%);
+            box-shadow: 0 0 0 3px var(--tw-ring-color);
+        }
+
+        /* --- Beautiful Article Prose Styling --- */
+        .prose-custom { line-height: 1.8; }
+        .prose-custom p { margin-bottom: 1.5em; font-size: 1.125rem; }
+        .prose-custom h2, .prose-custom h3 { font-family: 'Poppins', sans-serif; font-weight: 700; margin-top: 2.5em; margin-bottom: 1em; }
+        .prose-custom h2 { font-size: 2.25rem; }
+        .prose-custom h3 { font-size: 1.75rem; }
+        .prose-custom a { color: hsl(var(--primary-hue), 80%, 60%); text-decoration: none; font-weight: 600; background-image: linear-gradient(currentColor, currentColor); background-position: 0% 100%; background-repeat: no-repeat; background-size: 0% 2px; transition: background-size .3s; }
+        .prose-custom a:hover { background-size: 100% 2px; }
+        .prose-custom blockquote { border-left: 4px solid hsl(var(--primary-hue), 80%, 60%); padding-left: 1.5rem; font-style: italic; font-size: 1.25rem; color: #4b5563; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="aurora-background"></div>
+
+    <!-- Header -->
+    <header class="header-glass sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" id="homeLink" class="text-3xl font-bold text-gray-900 font-ui tracking-tight">
+                <img src="{% static 'nexuslogo.png' %}" alt="Nexus Logo" style="height:70px; display:inline; vertical-align:middle;">
+            Nexus</a>
+            <div class="flex items-center space-x-4">
+                <form action="{% url 'search_users' %}" method="GET" class="relative">
+                    <input type="text" name="q" placeholder="Search users..." class="py-2 px-4 pr-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <button type="submit" class="absolute right-3 top-2.5 text-gray-500">
+                        <i data-feather="search" class="w-4 h-4"></i>
+                    </button>
+                </form>
+        
+                {% if user.is_authenticated %}
+                <a href="/blog/post/create/" class="btn-magic flex items-center text-white font-semibold py-2.5 px-6 rounded-full">
+                    <i data-feather="edit" class="w-5 h-5 mr-2"></i>
+                    Write a Story
+                </a>
+                {% else %}
+                <a href="/login/" class="btn-magic flex items-center text-white font-semibold py-2.5 px-6 rounded-full">
+                    <i data-feather="log-in" class="w-5 h-5 mr-2"></i>
+                    Login to Write
+                </a>
+                {% endif %}
+                
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="relative container mx-auto px-6">
+        
+        <!-- Post List View -->
+        <div id="postListView" class="view py-16">
+            <div class="text-center mb-20 animate__animated animate__fadeInDown">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-gray-900 leading-tight">Where Stories Unfold</h1>
+                <p class="mt-4 text-xl text-gray-600 max-w-3xl mx-auto font-serif">A curated space for ideas, insights, and imagination from writers around the world.</p>
+                <!-- Debug section removed -->
+            </div>
+            <div id="postsContainer" class="grid gap-x-8 gap-y-16 md:grid-cols-2 lg:grid-cols-3">
+                {% for post in posts %}
+                    <div class="post-card bg-white shadow-lg rounded-3xl overflow-hidden flex flex-col">
+                        <div class="img-wrapper h-48 bg-gray-200 flex items-center justify-center">
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="object-cover w-full h-full">
+                            {% else %}
+                                <span class="text-gray-400">No Image</span>
+                            {% endif %}
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <h2 class="text-2xl font-bold mb-2">{{ post.title }}</h2>
+                            <p class="text-gray-500 text-sm mb-4">{{ post.slug }}</p>
+                            <p class="text-gray-700 flex-1">{{ post.content|truncatewords:20 }}</p>
+                            <div class="mt-4 flex items-center justify-between">
+                                <span class="text-xs text-indigo-600 font-semibold">Published: {{ post.published }}</span>
+                                <a href="{% url 'post_detail' post.slug %}" class="text-indigo-700 font-semibold hover:underline">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div>No posts yet.</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Post Detail View -->
+        <div id="postDetailView" class="view hidden">
+            <div class="max-w-4xl mx-auto py-16 md:py-24">
+                <button id="backToListBtn" class="flex items-center text-gray-500 hover:text-gray-900 font-semibold mb-10 group font-ui">
+                    <i data-feather="arrow-left" class="w-5 h-5 mr-2 transition-transform duration-300 group-hover:-translate-x-1"></i>
+                    All Stories
+                </button>
+                <div id="postDetailContent" class="bg-white/70 backdrop-blur-xl p-8 sm:p-12 rounded-3xl shadow-2xl">
+                    <!-- Detailed post content will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+         <!-- Create/Edit Post Form View -->
+        {% comment %} <div id="postFormView" class="view hidden">
+             <div class="max-w-4xl mx-auto py-16">
+                <h2 id="formTitle" class="text-5xl font-extrabold mb-10 text-gray-900 text-center">Craft Your Narrative</h2>
+                <form id="postForm" class="space-y-8 bg-white/70 backdrop-blur-xl p-8 sm:p-10 rounded-3xl shadow-2xl">
+                    <div>
+                        <label for="title" class="block text-lg font-medium text-gray-800 font-ui">Title</label>
+                        <input type="text" id="title" name="title" required class="mt-2 block w-full px-4 py-3 form-input text-lg" placeholder="The title of your story">
+                    </div>
+                    <div>
+                        <label for="slug" class="block text-lg font-medium text-gray-800 font-ui">URL Slug</label>
+                        <input type="text" id="slug" name="slug" required class="mt-2 block w-full px-4 py-3 bg-gray-100 border-gray-300 rounded-xl text-gray-500" readonly>
+                    </div>
+                    <div>
+                        <label for="content" class="block text-lg font-medium text-gray-800 font-ui">Content</label>
+                        <div id="content" name="content" class="mt-2 p-4 min-h-[350px] bg-white rounded-xl border border-gray-200" contenteditable="true" placeholder="Once upon a time..."></div>
+                    </div>
+                    <div>
+                        <label for="image" class="block text-lg font-medium text-gray-800 font-ui">Featured Image</label>
+                        <input type="file" id="image" name="image" class="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label for="category" class="block text-lg font-medium text-gray-800 font-ui">Category</label>
+                            <select id="category" name="category" class="mt-2 block w-full pl-4 pr-10 py-3 form-input bg-white">
+                                <option value="1">Technology</option>
+                                <option value="2">Creative Writing</option>
+                                <option value="3">Life & Philosophy</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="tags" class="block text-lg font-medium text-gray-800 font-ui">Tags</label>
+                            <input type="text" id="tags" name="tags" placeholder="e.g. AI, Fiction, Self-Improvement" class="mt-2 block w-full px-4 py-3 form-input">
+                        </div>
+                    </div>
+                    <div class="flex items-center pt-4">
+                        <input id="published" name="published" type="checkbox" class="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="published" class="ml-3 block text-md text-gray-800 font-ui">Publish Immediately</label>
+                    </div>
+                    <div class="flex justify-end space-x-4 pt-6">
+                        <button type="button" id="cancelFormBtn" class="px-8 py-3 rounded-full font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 transition-all">Cancel</button>
+                        <button type="submit" class="btn-magic px-10 py-3 rounded-full font-semibold text-white">Publish Story</button>
+                    </div>
+                </form> 
+            </div>
+        </div> {% endcomment %}
+    </main>
+    
+    <footer class="mt-24 pb-8">
+        <div class="container mx-auto text-center text-gray-500 font-ui">
+            <p>Designed by Arjun Goswami. &copy; 2025 all rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DOM Elements ---
+            const views = { list: document.getElementById('postListView'), detail: document.getElementById('postDetailView'), form: document.getElementById('postFormView') };
+            const postsContainer = document.getElementById('postsContainer');
+            const postDetailContent = document.getElementById('postDetailContent');
+            const newPostBtn = document.getElementById('newPostBtn');
+            const backToListBtn = document.getElementById('backToListBtn');
+            const homeLink = document.getElementById('homeLink');
+            const postForm = document.getElementById('postForm');
+            const cancelFormBtn = document.getElementById('cancelFormBtn');
+            const titleInput = document.getElementById('title');
+            const slugInput = document.getElementById('slug');
+
+            // --- Core Functions ---
+            const switchView = (viewName) => {
+                window.scrollTo(0, 0);
+                Object.keys(views).forEach(key => {
+                    const isTargetView = key === viewName;
+                    views[key].classList.toggle('hidden', !isTargetView);
+                    if (isTargetView) {
+                       views[key].classList.add('animate__animated', 'animate__fadeIn');
+                       views[key].addEventListener('animationend', () => {
+                           views[key].classList.remove('animate__animated', 'animate__fadeIn');
+                       }, { once: true });
+                    }
+                });
+            };
+
+            const generateSlug = (text) => text.toString().toLowerCase().trim()
+                .replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
+
+            // --- Event Listeners ---
+            backToListBtn.addEventListener('click', () => switchView('list'));
+            // Removed the event listener that was preventing navigation to the landing page
+            // Remove any JS that toggles the post form view
+            
+            titleInput.addEventListener('keyup', () => slugInput.value = generateSlug(titleInput.value));
+            
+            postForm.addEventListener('submit', e => {
+                e.preventDefault();
+                alert('Your story has been published to the world! (Check console for data)');
+                console.log(Object.fromEntries(new FormData(postForm)));
+                switchView('list');
+            });
+
+            // --- Initial Load ---
+            feather.replace();
+        });
+    </script>
+</body>
+</html>
